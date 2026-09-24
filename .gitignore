@@ -1,0 +1,30 @@
+# Supabase
+.supabase/
+.branches/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Node / tooling
+node_modules/
+dist/
+coverage/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local dumps / backups
+*.sql.gz
+*.dump
+*.backup
+backups/
+tmp/
