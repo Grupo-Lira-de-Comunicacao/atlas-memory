@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "codex/**"
+
+permissions:
+  contents: read
+
+jobs:
+  edge-function:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check Edge Function
+        run: deno check supabase/functions/atlas-memory/index.ts
+
+  migration-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check bootstrap migration is additive
+        shell: bash
+        run: |
+          set -euo pipefail
+          f=supabase/migrations/202609240001_bootstrap_atlas_memory.sql
+          test -f "$f"
+          grep -q "create table if not exists public.atlas_memory_knowledge" "$f"
+          grep -q "create table if not exists public.atlas_memory_decisions" "$f"
+          grep -q "create table if not exists public.atlas_memory_events" "$f"
+          ! grep -Eiq '(^|[[:space:]])(drop[[:space:]]+table|truncate[[:space:]]+table|delete[[:space:]]+from)([[:space:]]|$)' "$f"
+          ! grep -ERni '^[[:space:]]*(ATLAS_MEMORY_API_KEY|SUPABASE_SERVICE_ROLE_KEY|SUPABASE_ACCESS_TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|CLIENT_SECRET|PASSWORD)[[:space:]]*=[[:space:]]*[^[:space:]#]+' .env.example README.md docs
