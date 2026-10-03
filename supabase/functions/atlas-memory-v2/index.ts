@@ -500,7 +500,7 @@ Deno.serve(async (req) => {
     return response(503, { ok: false, error: "service_not_configured" });
   }
 
-  const suppliedKey = req.headers.get("apikey") ?? "";
+  const suppliedKey = req.headers.get("x-atlas-memory-key") ?? req.headers.get("apikey") ?? "";
   if (!suppliedKey || !safeEqual(suppliedKey, MEMORY_API_KEY)) {
     return response(401, { ok: false, error: "unauthorized" });
   }
