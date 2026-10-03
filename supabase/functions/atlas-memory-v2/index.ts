@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const VERSION = "2.1.0-shadow";
+const VERSION = "2.1.0";
 const ACTIVE_EXCLUDED = new Set(["SUPERSEDED", "HISTORICAL", "DELETED"]);
 const MAX_LIMIT = 100;
 
